@@ -136,9 +136,12 @@ class Memory(object):
         clock = pygame.time.Clock()
 
         SETUP_NEW_GAME = 0
-        PLAYER_SELECT_FIRST = 10
-        PLAYER_SELECT_SECOND = 11
-        PLAYER_DONE = 12
+        PLAYER1_SELECT_FIRST = 10
+        PLAYER1_SELECT_SECOND = 11
+        PLAYER1_DONE = 12
+        PLAYER2_SELECT_FIRST = 50
+        PLAYER2_SELECT_SECOND = 51
+        PLAYER2_DONE = 52
         ROBOT_SELECT_FIRST = 20
         ROBOT_SELECT_FIRST_WAIT = 21
         ROBOT_SELECT_SECOND = 30
@@ -203,69 +206,62 @@ class Memory(object):
                     else:
                         if next_player == 1:
                             self.side_panel.show_robot(False,0,0)
-                            state = ROBOT_SELECT_FIRST
+                            state = PLAYER2_SELECT_FIRST
                             next_player = 0
                         else:
-                            self.side_panel.show_player(False)
-                            state = PLAYER_SELECT_FIRST
+                            self.side_panel.show_player1(False)
+                            state = PLAYER1_SELECT_FIRST
                             next_player = 1
-                # --- PLAYER STATES ---
-                elif state == PLAYER_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
+                # --- PLAYER1 STATES ---
+                elif state == PLAYER1_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
                     if c and not c.selected:
                         self.select_card(c)
-                        state = PLAYER_SELECT_SECOND
-                elif state == PLAYER_SELECT_SECOND and mouse_clicked:
+                        state = PLAYER1_SELECT_SECOND
+                elif state == PLAYER1_SELECT_SECOND and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
                     if c and not c.selected:
                         self.select_card(c)
-                        state = PLAYER_DONE
+                        state = PLAYER1_DONE
                         state_delay = DELAY
-                elif state == PLAYER_DONE:
+                elif state == PLAYER1_DONE:
                     pair = self.board.end_of_turn() 
                     if pair:
                         for p in pair:
                             self.stardust.add(self.game_board.card_to_location(p))
-                        self.side_panel.player_score+=1
+                        self.side_panel.player1_score+=1
                         self.side_panel.update_score()
-                        state = PLAYER_SELECT_FIRST
+                        state = PLAYER1_SELECT_FIRST
                         self.pair_snd.play() 
                     else:
-                        state = ROBOT_SELECT_FIRST 
+                        self.side_panel.show_player2(False)
+                        state = PLAYER2_SELECT_FIRST 
                     if self.board.is_game_over():
                         state = GAME_OVER
-                # --- ROBOT STATES ---
-                elif state == ROBOT_SELECT_FIRST and self.game_board.is_init_done():
-                    c = self.ai_player.select_first_card()
-                    self.side_panel.show_robot(False,self.ai_player.first,0)                    
-                    self.robot_mouse.goto(self.game_board.card_to_location(c))
-                    state = ROBOT_SELECT_FIRST_WAIT
-                elif state == ROBOT_SELECT_FIRST_WAIT and not self.robot_mouse.is_moving():
-                    self.select_card(self.ai_player.last_selected)
-                    state = ROBOT_SELECT_SECOND
-                elif state == ROBOT_SELECT_SECOND:
-                    c = self.ai_player.select_second_card()
-                    self.side_panel.show_robot(False,self.ai_player.first,self.ai_player.second)                    
-                    self.robot_mouse.goto(self.game_board.card_to_location(c))
-                    state = ROBOT_SELECT_SECOND_WAIT
-                elif state == ROBOT_SELECT_SECOND_WAIT and not self.robot_mouse.is_moving():
-                    self.robot_mouse.hide()           
-                    self.select_card(self.ai_player.last_selected)
-                    state = ROBOT_DONE
-                    state_delay = DELAY
-                elif state == ROBOT_DONE:           
+                # --- PLAYER2 STATES ---
+                elif state == PLAYER2_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
+                    c = self.game_board.location_to_card(mouse_pos)
+                    if c and not c.selected:
+                        self.select_card(c)
+                        state = PLAYER2_SELECT_SECOND
+                elif state == PLAYER2_SELECT_SECOND and mouse_clicked:
+                    c = self.game_board.location_to_card(mouse_pos)
+                    if c and not c.selected:
+                        self.select_card(c)
+                        state = PLAYER2_DONE
+                        state_delay = DELAY
+                elif state == PLAYER2_DONE:
                     pair = self.board.end_of_turn() 
                     if pair:
                         for p in pair:
                             self.stardust.add(self.game_board.card_to_location(p))
-                        self.pair_snd.play() 
                         self.side_panel.robot_score+=1
                         self.side_panel.update_score()
-                        state = ROBOT_SELECT_FIRST 
-                        state_delay = DELAY
+                        state = PLAYER2_SELECT_FIRST
+                        self.pair_snd.play() 
                     else:
-                        self.side_panel.show_player(False)
-                        state = PLAYER_SELECT_FIRST 
+                        self.side_panel.show_player1(False)
+                        state = PLAYER1_SELECT_FIRST 
                     if self.board.is_game_over():
                         state = GAME_OVER
                 # --- GAME OVER ---

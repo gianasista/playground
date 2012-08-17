@@ -22,7 +22,7 @@ class SidePanel(object):
         self.text(0,"Score",30)
         
         self.robot = self.loader.load_image("robot.png",True)
-        self.player = self.loader.load_image("player.png",True)
+        self.player1 = self.loader.load_image("player.png",True)
         self.both = self.loader.load_image("both_win.png",True)
         
         self.signs = {}
@@ -33,7 +33,7 @@ class SidePanel(object):
         self.signs["22"] = self.loader.load_image("known_known.png",True)
                 
         self.win = self.loader.load_image("win.png",True)
-        self.player_score = 0
+        self.player1_score = 0
         self.robot_score = 0
         self.games_stat = 0
         self.player_stat = 0
@@ -42,7 +42,7 @@ class SidePanel(object):
         
         self.update_score()
         self.update_stats()
-        self.show_player(False)
+        self.show_player1(False)
         #self.show_robot(False,0,0)
     
     def clear_gfx_area(self):
@@ -51,10 +51,10 @@ class SidePanel(object):
         #pygame.draw.rect(self.back, (0,0,0), r, 1) 
         
     def show_winner(self):
-        if self.player_score > self.robot_score:
-            self.show_player(True)
+        if self.player1_score > self.robot_score:
+            self.show_player1(True)
             return 1
-        elif self.player_score < self.robot_score:
+        elif self.player1_score < self.robot_score:
             self.show_robot(True, 0, 0)
             return 2
         else:
@@ -64,18 +64,29 @@ class SidePanel(object):
     def show_both(self):
         self.clear_gfx_area()
         
-        r = self.player.get_rect()
+        r = self.player1.get_rect()
         r.center = (90,330)
 
         self.back.blit(self.both,r.topleft)
 
-    def show_player(self,win):
+    def show_player1(self,win):
         self.clear_gfx_area()
         
-        r = self.player.get_rect()
+        r = self.player1.get_rect()
         r.center = (110,340-10)
 
-        self.back.blit(self.player,r.topleft)
+        self.back.blit(self.player1,r.topleft)
+
+        if win:
+            self.back.blit(self.win,(90,227-10))
+            
+    def show_player2(self,win):
+        self.clear_gfx_area()
+        
+        r = self.robot.get_rect()
+        r.center = (110,340-10)
+
+        self.back.blit(self.robot,r.topleft)
 
         if win:
             self.back.blit(self.win,(90,227-10))
@@ -83,7 +94,7 @@ class SidePanel(object):
     def show_robot(self,win,card1,card2):
         self.clear_gfx_area()
         
-        r = self.player.get_rect()
+        r = self.player1.get_rect()
         r.center = (110,340)
 
         self.back.blit(self.robot,r.topleft)
@@ -106,10 +117,10 @@ class SidePanel(object):
         r = pygame.Rect(50,54,126,129)
         self.back.blit(self.side,r.topleft,r)
         
-        self.text(1,"Player",75)
-        self.text(0,str(self.player_score),75+25)
+        self.text(1,"Julia",75)
+        self.text(0,str(self.player1_score),75+25)
 
-        self.text(1,"Robot",75+60)
+        self.text(1,"Oliver",75+60)
         self.text(0,str(self.robot_score),75+25+60)
         
     def update_stats(self):
@@ -118,10 +129,10 @@ class SidePanel(object):
         
         y = 500
         r = 22
-        self.text(2,"Games: %d" % self.games_stat,y); y+=r
-        self.text(2,"Player: %d" % self.player_stat,y); y+=r
-        self.text(2,"Robot: %d" % self.robot_stat,y); y+=r
-        self.text(2,"AI Level: %d" % self.ai_level,y); y+=r
+        #self.text(2,"Games: %d" % self.games_stat,y); y+=r
+        self.text(2,"Julia: %d" % self.player_stat,y); y+=r
+        self.text(2,"Oliver: %d" % self.robot_stat,y); y+=r
+        #self.text(2,"AI Level: %d" % self.ai_level,y); y+=r
 
     def text(self,fnt,txt,y,x=None):
         color = (0,0,0)
