@@ -5,10 +5,11 @@ import random
 from loader import Loader
 
 class GfxCard(object):
-    def __init__(self,pos,card,back,images,snd):
+    def __init__(self,pos,card,back,images_first,images_second, snd):
         self.card = card
         self.back = back
-        self.images = images
+        self.images_first = images_first
+        self.images_second = images_second
     
         self.pos = pos
         self.rect = pygame.Rect(pos,(90,90))
@@ -33,7 +34,11 @@ class GfxCard(object):
             return
         dest.blit(self.back,self.rect.topleft)
         if self.card.selected:
-            dest.blit(self.images[self.card.type],(self.rect.x+5,self.rect.y+5))
+            if self.card.isFirst:
+                image = self.images_first[self.card.type]
+            else:
+                image = self.images_second[self.card.type]
+            dest.blit(image,(self.rect.x+5,self.rect.y+5))
 
 class GameBoard(object):
     def __init__(self):
@@ -45,9 +50,11 @@ class GameBoard(object):
         self.cards2 = self.loader.load_image("cards2.png",True)
         
         self.card_back = self.loader.load_image("card.png",True)
-        self.card_images = []
+        self.card_images_first = []
+        self.card_images_second = []
         for i in range(18):
-            self.card_images.append(self.loader.load_image("img%d.png" % (i+1)))
+            self.card_images_first.append(self.loader.load_image("img%d_1.png" % (i+1)))
+            self.card_images_second.append(self.loader.load_image("img%d_2.png" % (i+1)))
 
         self.gfxcards = []
         self.gfxcards_hidden = []
@@ -129,11 +136,16 @@ class GameBoard(object):
               
         y = 480
         r = 20
-        self._text2("Coding and graphics by John Eriksson",y); y+=r
-        self._text2("Photos by Jenny Eriksson",y); y+=r
-        self._text2("Testing by Jenny and Pelle Eriksson",y); y+=r
-        self._text2("Toys from Pelle and Rasmus collections",y); y+=r
-        self._text2("Fonts by Simsjeedy and Jakob Fischer",y); y+=r
+        self._text2("Persoenliches Memory fuer Julia und Oliver",y); y+=r
+        self._text2("fuer Ihre Hochzeit am 15.09.2012",y); y+=r
+        
+    def render_large_image(self, screen, image_number):
+        #large_image = self.loader.load_image("large_img%d.png" % image_number)
+        large_image = self.loader.load_image("large_img1.png")
+        #self.back.blit(self.desk,(0,0))
+        #self.back.blit(large_image,(10,10))
+        screen.draw(large_image, 0)
+        return
 
     def render_gameover(self,result):
         self.back.blit(self.desk,(0,0))
@@ -151,7 +163,7 @@ class GameBoard(object):
         for c in cards:
             xp = 8+x*100
             yp = 5+y*100
-            self.gfxcards_hidden.append(GfxCard((xp,yp), c, self.card_back, self.card_images,self.card_snd))
+            self.gfxcards_hidden.append(GfxCard((xp,yp), c, self.card_back, self.card_images_first,self.card_images_second, self.card_snd))
             x+=1
             if x == 6:
                 x=0

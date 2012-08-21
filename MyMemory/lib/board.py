@@ -1,11 +1,15 @@
 import random
 
 class Card(object):
-    def __init__(self,type):
+    def __init__(self,type,isFirst):
         self.type = type 
         self.age = 0
         self.selected = False
         self.active = True
+        self.isFirst = isFirst
+        
+    def is_same_card(self, other):
+        self.type = other.type
             
 class Board(object):
     def __init__(self):
@@ -16,8 +20,8 @@ class Board(object):
         self.board = []
         for i in range(18):
             # add two of each type
-            self.board.append(Card(i))
-            self.board.append(Card(i))
+            self.board.append(Card(i, True))
+            self.board.append(Card(i, False))
         random.shuffle(self.board)
         self.unknown = list(self.board)
         self.known = []
