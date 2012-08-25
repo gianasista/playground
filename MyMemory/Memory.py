@@ -159,6 +159,8 @@ class Memory(object):
         next_player = 0
         
         starburst_count = 0
+        
+        shown_cards = []
 
         while 1:
             clock.tick(30)
@@ -192,6 +194,9 @@ class Memory(object):
                 
             # === STATE HANDLER ===
 
+            is_select_event = False
+            selected_card = Card(-1, False)
+            
             if state_delay > 0:
                 state_delay -= 1
             else:
@@ -215,12 +220,15 @@ class Memory(object):
                 # --- PLAYER1 STATES ---
                 elif state == PLAYER1_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
-                    self.game_board.render_large_image(self.screen, 1)
+                    is_select_event = True
+                    selected_card = c
                     if c and not c.selected:
                         self.select_card(c)
                         state = PLAYER1_SELECT_SECOND
                 elif state == PLAYER1_SELECT_SECOND and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
+                    is_select_event = True
+                    selected_card = c
                     if c and not c.selected:
                         self.select_card(c)
                         state = PLAYER1_DONE
@@ -242,11 +250,15 @@ class Memory(object):
                 # --- PLAYER2 STATES ---
                 elif state == PLAYER2_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
+                    is_select_event = True
+                    selected_card = c
                     if c and not c.selected:
                         self.select_card(c)
                         state = PLAYER2_SELECT_SECOND
                 elif state == PLAYER2_SELECT_SECOND and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
+                    is_select_event = True
+                    selected_card = c
                     if c and not c.selected:
                         self.select_card(c)
                         state = PLAYER2_DONE
@@ -303,6 +315,10 @@ class Memory(object):
             # === DRAWING ===
 
             self.game_board.draw(self.screen)
+            
+            if is_select_event and  not (selected_card in shown_cards):
+                self.game_board.render_large_image(self.screen, selected_card)
+                shown_cards.append(selected_card)
             
             if state != START_SCREEN:
                 self.side_panel.draw(self.screen)                            

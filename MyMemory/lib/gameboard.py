@@ -140,12 +140,13 @@ class GameBoard(object):
         self._text2("Persoenliches Memory fuer Julia und Oliver",y); y+=r
         self._text2("fuer Ihre Hochzeit am 15.09.2012",y); y+=r
         
-    def render_large_image(self, screen, image_number):
-        #large_image = self.loader.load_image("large_img%d.png" % image_number)
-        large_image = self.loader.load_image("img1_1_large.png")
-        #resized_large_image = pygame.Surface((800, 600))
-        #pygame.transform.scale(large_image, (800, 600))
-        #self.back.blit(self.desk,(0,0))
+    def render_large_image(self, screen, card):
+        if card.isFirst:
+            number = 1
+        else:
+            number = 2
+        large_image = self.loader.load_image("img%(type)d_%(is_first)d_large.png" % {'type': card.type, 'is_first': number} )
+        
         overlay = pygame.Surface((800, 600))
         overlay.fill((0, 0, 0))
         overlay.set_alpha(220)
@@ -158,7 +159,7 @@ class GameBoard(object):
         
         pygame.display.update()
         pygame.time.delay(2000)
-        #screen.draw(large_image, 0)
+        
         return
 
     def render_gameover(self,result):
