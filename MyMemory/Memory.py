@@ -98,8 +98,7 @@ class StarDustAnim(object):
     
 class Memory(object):
     def __init__(self):
-        #self.screen = pygame.display.set_mode((800, 600),1)
-        self.screen = pygame.display.set_mode((1024, 768),1)
+        self.screen = pygame.display.set_mode((800, 600),1)
         pygame.display.set_caption("Memory v1.0")
                 
         self.loader = Loader()
@@ -216,7 +215,7 @@ class Memory(object):
                 # --- PLAYER1 STATES ---
                 elif state == PLAYER1_SELECT_FIRST and self.stardust.anim_done() and self.game_board.is_init_done() and mouse_clicked:
                     c = self.game_board.location_to_card(mouse_pos)
-                    #self.game_board.render_large_image(self.screen, 1)
+                    self.game_board.render_large_image(self.screen, 1)
                     if c and not c.selected:
                         self.select_card(c)
                         state = PLAYER1_SELECT_SECOND

@@ -21,8 +21,8 @@ class SidePanel(object):
         self.back = self.side.copy()
         self.text(0,"Score",30)
         
-        self.robot = self.loader.load_image("robot.png",True)
-        self.player1 = self.loader.load_image("player.png",True)
+        self.robot = self.loader.load_image("oliver.png",True)
+        self.player1 = self.loader.load_image("julia.png",True)
         self.both = self.loader.load_image("both_win.png",True)
         
         self.signs = {}

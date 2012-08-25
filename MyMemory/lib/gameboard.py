@@ -3,6 +3,7 @@ from pygame.locals import *
 import random 
 
 from loader import Loader
+from pygame import surface
 
 class GfxCard(object):
     def __init__(self,pos,card,back,images_first,images_second, snd):
@@ -141,10 +142,23 @@ class GameBoard(object):
         
     def render_large_image(self, screen, image_number):
         #large_image = self.loader.load_image("large_img%d.png" % image_number)
-        large_image = self.loader.load_image("large_img1.png")
+        large_image = self.loader.load_image("img1_1_large.png")
+        #resized_large_image = pygame.Surface((800, 600))
+        #pygame.transform.scale(large_image, (800, 600))
         #self.back.blit(self.desk,(0,0))
-        #self.back.blit(large_image,(10,10))
-        screen.draw(large_image, 0)
+        overlay = pygame.Surface((800, 600))
+        overlay.fill((0, 0, 0))
+        overlay.set_alpha(220)
+        screen.blit(overlay, (0, 0))
+        
+        image_width = large_image.get_width()
+        image_height = large_image.get_height()
+        
+        screen.blit(large_image, (400 - image_width/2, 300 - image_height/2))
+        
+        pygame.display.update()
+        pygame.time.delay(2000)
+        #screen.draw(large_image, 0)
         return
 
     def render_gameover(self,result):
