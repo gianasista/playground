@@ -151,7 +151,7 @@ class GameBoard(object):
             number = 1
         else:
             number = 2
-        large_image = self.loader.load_image("img%(type)d_%(is_first)d_large.png" % {'type': card.type, 'is_first': number} )
+        large_image = self.loader.load_image("img%(type)d_%(is_first)d_large.png" % {'type': card.type + 1, 'is_first': number} )
         
         overlay = pygame.Surface((800, 600))
         overlay.fill((0, 0, 0))
