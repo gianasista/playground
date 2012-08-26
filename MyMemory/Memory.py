@@ -161,6 +161,8 @@ class Memory(object):
         starburst_count = 0
         
         shown_cards = []
+        
+        mouse_over_card = Card(-1, False)
 
         while 1:
             clock.tick(30)
@@ -196,6 +198,13 @@ class Memory(object):
 
             is_select_event = False
             selected_card = Card(-1, False)
+            
+            if event.type == MOUSEMOTION:
+                mouse_over_card.mouse_over = False                
+                c = self.game_board.location_to_card(event.pos)
+                if c is not None:
+                    c.mouse_over = True
+                    mouse_over_card = c
             
             if state_delay > 0:
                 state_delay -= 1

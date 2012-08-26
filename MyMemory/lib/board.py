@@ -7,6 +7,7 @@ class Card(object):
         self.selected = False
         self.active = True
         self.isFirst = isFirst
+        self.mouse_over = False
         
     def is_same_card(self, other):
         self.type = other.type

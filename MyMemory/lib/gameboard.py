@@ -6,9 +6,10 @@ from loader import Loader
 from pygame import surface
 
 class GfxCard(object):
-    def __init__(self,pos,card,back,images_first,images_second, snd):
+    def __init__(self, pos, card, back, mouse_over, images_first, images_second, snd):
         self.card = card
         self.back = back
+        self.mouse_over = mouse_over
         self.images_first = images_first
         self.images_second = images_second
     
@@ -33,7 +34,11 @@ class GfxCard(object):
     def draw(self,dest):
         if not self.card.active:
             return
-        dest.blit(self.back,self.rect.topleft)
+        if self.card.mouse_over:
+            dest.blit(self.mouse_over, self.rect.topleft)
+        else:
+            dest.blit(self.back,self.rect.topleft)
+            
         if self.card.selected:
             if self.card.isFirst:
                 image = self.images_first[self.card.type]
@@ -51,6 +56,7 @@ class GameBoard(object):
         self.cards2 = self.loader.load_image("cards2.png",True)
         
         self.card_back = self.loader.load_image("card.png",True)
+        self.card_mouse_over = self.loader.load_image("card_mouse_over.png", True)
         self.card_images_first = []
         self.card_images_second = []
         for i in range(18):
@@ -178,7 +184,7 @@ class GameBoard(object):
         for c in cards:
             xp = 8+x*100
             yp = 5+y*100
-            self.gfxcards_hidden.append(GfxCard((xp,yp), c, self.card_back, self.card_images_first,self.card_images_second, self.card_snd))
+            self.gfxcards_hidden.append(GfxCard((xp,yp), c, self.card_back, self.card_mouse_over, self.card_images_first,self.card_images_second, self.card_snd))
             x+=1
             if x == 6:
                 x=0
